@@ -1,0 +1,14 @@
+# Directories
+/.vscode/
+/.beatsaber/
+**/dist/
+**/venv/
+**/.venv/
+**/__pycache__/
+**/build/
+*.egg-info/
+
+# Files
+requirements.txt
+*.pyc
+_test*.py

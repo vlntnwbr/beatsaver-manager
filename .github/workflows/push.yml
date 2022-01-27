@@ -1,0 +1,94 @@
+##
+#   Copyright (c) 2022 Valentin Weber
+#
+#   This file is part of the software beatsaver-playlist-manager.
+#
+#   The software is licensed under the European Union Public License
+#   (EUPL) version 1.2 or later. You should have received a copy of
+#   the english license text with the software. For your rights and
+#   obligations under this license refer to the file LICENSE or visit
+#   https://joinup.ec.europa.eu/community/eupl/og_page/eupl to view
+#   official translations of the licence in another language of the EU.
+##
+
+name: Tests
+
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.10
+    - name: Set up Environment
+      id: prep
+      run: |
+        python -m pip install -q --upgrade pip pipenv setuptools wheel
+        pipenv install -d
+        pipenv graph
+        echo "::set-output name=package::bsmgr"
+    - name: Run Bandit Security Checks
+      id: security
+      run: |
+        pipenv run bandit -r ${{ steps.prep.outputs.package }} setup.py
+    - name: Run pydocstyle Checks
+      id: pydocstyle
+      run: pipenv run pydocstyle -e ${{ steps.prep.outputs.package }} setup.py
+    - name: Run Flake8
+      if: ${{ github.ref == 'refs/heads/master' }}
+      id: flake8
+      run : pipenv run flake8 --doctests --max-doc-length 72 ${{ steps.prep.outputs.package }} setup.py
+    - name: Run Pylint
+      if: ${{ github.ref == 'refs/heads/master' }}
+      id: pylint
+      run: pipenv run pylint -f colorized ${{ steps.prep.outputs.package }} setup.py || pipenv run pylint-exit -efail -wfail $?
+    - name: Build Source Distribution
+      id: build
+      run: |
+        python setup.py sdist
+        $name = python setup.py --name
+        $version = python setup.py --version
+        echo "::set-output name=version::${version}"
+        echo "::set-output name=name::${name}"
+        echo "::set-output name=sdist::${name}-${version}.tar.gz"
+        echo "::set-output name=bdist::${{ steps.prep.outputs.package }}-${version}-py3-none-any.whl"
+    - name: Check Release Readiness  # only on tags starting with v
+      if: ${{ startsWith( github.ref, 'refs/tags/v' ) }}
+      id: is_rc_ok
+      run: echo "::set-output name=ready::${{ endswith( github.ref, steps.build.outputs.version ) }}"
+    - name: Create Release  # only if output from is_rc_ok is true
+      if: ${{ steps.is_rc_ok.outputs.ready }}
+      id: release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "v${{ version }}"
+        release_name: "${{ steps.build.outputs.name }} v${{ version }}"
+    - name: Upload Source Distribution  # only if output from is_rc_ok is true
+      if: ${{ steps.is_rc_ok.outputs.ready }}
+      id: upload_sdist
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./dist/${{ steps.build.outputs.sdist }}
+        asset_name: ${{ steps.build.outputs.name }}.tar.gz
+        asset_content_type: application/x-gzip
+    - name: Publish PyPI  # only if output from is_rc_ok is true
+      if: ${{ steps.is_rc_ok.outputs.ready }}
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_TOKEN }}
