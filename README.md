@@ -1,4 +1,4 @@
-# Beat Saber Custom Level and Playlist Manager
+# Beat Saber Custom Level and Playlist Manager ![Tests-badge][pl-tests]
 Command Line Interface to install, remove and update custom Beat Saber levels
 using the [BeatSaver][beatsaver] API.
 
@@ -51,4 +51,5 @@ using the [BeatSaver][beatsaver] API.
 - optionally remove them
 - behaves exactly the same as 'bpl sync'
 
+[pl-tests]: https://github.com/vlntnwbr/beatsaver-manager/workflows/Tests/badge.svg
 [beatsaver]: https://beatsaver.com
