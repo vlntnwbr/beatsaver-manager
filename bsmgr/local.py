@@ -19,8 +19,8 @@ import shutil
 from pathlib import Path
 from typing import List
 
-from .core.exceptions import BeatSaberError
-from .core.models import BsPlaylist, CustomLevel
+from .core.exceptions import BeatSaberError, ModelError
+from .core.models import BsPlaylist, CustomLevel, BsInvalidLocal
 
 
 class BeatSaberManager:
@@ -52,18 +52,16 @@ class BeatSaberManager:
             if bpl.is_file() and bpl.suffix == self.playlist_ext
         ]
 
-    def get_playlists(self) -> List[BsPlaylist]:
+    def get_playlists(self) -> List[BsPlaylist | BsInvalidLocal]:
         """Return list with all playlists of given installation."""
-        # TODO: exception handling
-        # - list only includes existing files
-        # - potential OSError needs handling
-        # - potential ModelError needs handling
-        # - exception handling should not interrupt for-loop
         playlist_files = self.get_bpl_files()
         bplists = []
         for playlist in playlist_files:
-            content = playlist.read_bytes()
-            bplists.append(BsPlaylist.from_json(content))
+            try:
+                content = playlist.read_bytes()
+                bplists.append(BsPlaylist.from_json(content))
+            except (OSError, ModelError) as exc:
+                bplists.append(BsInvalidLocal(playlist, exc))
         return bplists
 
     def get_playlist_names(self) -> List[str]:
@@ -85,12 +83,14 @@ class BeatSaberManager:
             if lvl.is_dir() and lvl.name not in self.default_songs
         ]
 
-    def get_custom_levels(self) -> List[CustomLevel]:
+    def get_custom_levels(self) -> List[CustomLevel | BsInvalidLocal]:
         """Return keys of all installed songs from directory names."""
         return [CustomLevel(lvl) for lvl in self.get_custom_lvl_dirs()]
 
     def remove_custom_level(self, lvl: Path) -> None:
         """Delete an installed Beat Saber custom level."""
+        # TODO: exception handling
+        # - determine which exceptions shutil.rmtree can raise
 
 
 if __name__ == '__main__':

@@ -81,6 +81,14 @@ class BsPlaylist(Model):
 
 
 @dataclasses.dataclass(repr=True)
+class BsInvalidLocal(Model):
+    """Container for unreadable local Beat Saber playlist or level."""
+
+    path: Path
+    exc: Exception
+
+
+@dataclasses.dataclass(repr=True)
 class BsMap(Model):
     """Container for custom map data from BeatSaver."""
 
