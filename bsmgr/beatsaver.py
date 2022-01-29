@@ -29,11 +29,11 @@ class BeatSaverApi:
         """Create the API handler."""
         self.base_url = "https://api.beatsaver.com/"
 
-    def get_playlist_by_key(self, key: str):
+    def get_playlist_by_key(self, key: str) -> BsPlaylist:
         """Download a playlist referenced by key."""
         return self.get_playlist_from_url(self._format_playlist_url(key))
 
-    def get_playlist_from_url(self, url: str):
+    def get_playlist_from_url(self, url: str) -> BsPlaylist:
         """Download a playlist referenced by url."""
         response = self._get_beatsaver_url(url)
         try:
@@ -42,7 +42,7 @@ class BeatSaverApi:
         except ModelError as exc:
             raise BeatSaverApiError("playlist data invalid") from exc
 
-    def get_song_by_key(self, key: str):
+    def get_song_by_key(self, key: str) -> BsMap:
         """Download the metadata of a custom level referenced by key."""
         response = self._get_beatsaver_url(self._format_song_url(key))
         try:
