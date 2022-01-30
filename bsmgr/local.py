@@ -17,7 +17,7 @@ import os
 import shutil
 
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from .core.exceptions import BeatSaberError, ModelError
 from .core.models import BsPlaylist, CustomLevel, BsInvalidLocal
@@ -68,12 +68,15 @@ class BeatSaberManager:
         """Return list with all playlist names of given installation."""
         return [bpl.title for bpl in self.get_playlists()]
 
+    def get_playlist_by_key(self, key: str) -> Optional[BsPlaylist]:
+        """Return playlist for given key if it exists."""
+    
     def remove_playlist(self, playlist: BsPlaylist) -> None:
         """Remove given playlist file."""
         # TODO
 
     def install_playlist(self, playlist: BsPlaylist) -> None:
-        """Install given playlist file."""
+        """Write JSON playlist content to file in playlist directory."""
         # TODO
 
     def get_custom_lvl_dirs(self) -> List[Path]:
@@ -87,10 +90,16 @@ class BeatSaberManager:
         """Return keys of all installed songs from directory names."""
         return [CustomLevel(lvl) for lvl in self.get_custom_lvl_dirs()]
 
+    def get_custom_level_by_key(self, key: str) -> Optional[CustomLevel]:
+        """Return custom level for given key if it exists."""
+    
     def remove_custom_level(self, lvl: Path) -> None:
         """Delete an installed Beat Saber custom level."""
         # TODO: exception handling
         # - determine which exceptions shutil.rmtree can raise
+
+    def install_custom_level(self, lvl) -> None:
+        """Extract the zipped custom level contents to lvl directory."""
 
 
 if __name__ == '__main__':
