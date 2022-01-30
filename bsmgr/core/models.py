@@ -49,6 +49,12 @@ class BsPlaylist(Model):
     url: str
     songs: Tuple[BsPlaylistItem]
     _json: bytes
+    filepath = Optional[Path]
+    key: str = dataclasses.field(init=False)
+
+    def __post_init__(self) -> None:
+        """Set key attribute parsed from playlist url."""
+        self.key = self.url.rsplit("/", 2)[-2]
 
     @classmethod
     def from_json(cls, content: bytes):
@@ -75,6 +81,14 @@ class BsPlaylist(Model):
         """Return tuple with keys of all songs."""
         return tuple(s.key for s in self.songs)
 
+    @property
+    def filename(self) -> str:
+        """Return filename from filepath or construct it using key."""
+        if self.filepath is not None:
+            return self.filepath.name
+        else:  # like BSMG ModAssistant OneClick filename
+            return f"beatsaver-{self.key}.bplist"
+    
     def __str__(self) -> str:
         """Return bplist filename for playlist."""
         return f"BeatSaver - {self.title}.bplist"
@@ -130,7 +144,7 @@ class CustomLevel(Model):
     key: str = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
-        """Get custom level key from directory name."""
+        """Set key attribute derived from level directory name."""
         self.key = self.directory.name.split(" ")[0]
 
     def __str__(self) -> str:
