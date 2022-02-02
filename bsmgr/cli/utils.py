@@ -16,7 +16,7 @@
 import os
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter, \
-    _SubParsersAction as SubParser
+    ArgumentTypeError as ArgError, _SubParsersAction as SubParser
 from pathlib import Path
 from typing import Optional
 
@@ -44,7 +44,7 @@ class CommandLineInterface:
             "If the variable is not set, the argument MUST be provided"
         ))
         self.parser = ArgumentParser(
-            prog="bsmgr",
+            prog="bsdl",
             description="manager for custom Beat Saber playlists and levels.",
             epilog=self.epilog,
             formatter_class=self.formatter
@@ -57,15 +57,15 @@ class CommandLineInterface:
             metavar="<dir>"
         )
         main = self.parser.add_subparsers(
-            dest="command", required=True, metavar="COMMAND"
+            dest="command", required=True, metavar="<command>"
         )
         bpl = self.add_parser(main, "bpl", "manage Beat Saber playlists")
         self.bpl = bpl.add_subparsers(
-            dest="subcommand", required=True, metavar="COMMAND"
+            dest="subcommand", required=True, metavar="<command>"
         )
         lvl = self.add_parser(main, "lvl", "manage Beat Saber custom levels")
         self.lvl = lvl.add_subparsers(
-            dest="subcommand", required=True, metavar="COMMAND"
+            dest="subcommand", required=True, metavar="<command>"
         )
 
     def add_bpl_cmd(self, cmd: str, msg: str) -> ArgumentParser:
@@ -98,6 +98,10 @@ class CommandLineInterface:
             "--files", action="store_true",
             help="set this to treat all playlist arguments as paths to files"
         )
+        bpl.add_argument(
+            "-f", "--force", action="store_true",
+            help="set this to force install, overwriting any existing playlist"
+        )
         self.add_pos_arg(
             bpl, "playlist",
             "one (or more) beatsaver url(s) for playlist(s) to be installed"
@@ -109,10 +113,6 @@ class CommandLineInterface:
         bpl.add_argument(
             "--outdated", action="store_true",
             help="set this to only display outdated playlists"
-        )
-        bpl.add_argument(
-            "--detail", action="store_true",
-            help="set this to display playlists in a detailed table"
         )
 
     def _bpl_remove(self) -> None:  # TODO
@@ -146,6 +146,10 @@ class CommandLineInterface:
         lvl.add_argument(
             "--files", action="store_true",
             help="set this to treat all level arguments as paths to zip files"
+        )
+        lvl.add_argument(
+            "-f", "--force", action="store_true",
+            help="set this to force install, overwriting any existing level"
         )
         self.add_pos_arg(
             lvl, "level",
@@ -187,7 +191,7 @@ class CommandLineInterface:
 
     @classmethod
     def setup(cls) -> ArgumentParser:
-        """Return parser object after adding all subcommands."""
+        """Return parser object after setting up all subcommands."""
         cli = cls()
         cli._bpl_install()
         cli._bpl_list()
