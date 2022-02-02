@@ -18,6 +18,18 @@ import os
 from argparse import ArgumentParser, RawDescriptionHelpFormatter, \
     _SubParsersAction as SubParser
 from pathlib import Path
+from typing import Optional
+
+
+def valid_beatsaber_dir(path: Optional[str]) -> Path:
+    """Return absolute path if it points to existing directory."""
+    print(path)
+    if path == "NOT_SET":
+        raise ArgError("BEATSABER environment variable is not set")
+    arg_path = Path(path).resolve()
+    if not arg_path.is_dir():
+        raise ArgError(f"Beat Saber directory '{arg_path}' does not exist.")
+    return arg_path
 
 
 class CommandLineInterface:
@@ -40,9 +52,9 @@ class CommandLineInterface:
         self.parser.add_argument(
             "--beatsaber",
             help="path to directory where Beat Saber is installed",
-            default=os.getenv("BEATSABER"),
-            type=Path,
-            metavar="PATH"
+            default=os.getenv("BEATSABER", "NOT_SET"),
+            type=valid_beatsaber_dir,
+            metavar="<dir>"
         )
         main = self.parser.add_subparsers(
             dest="command", required=True, metavar="COMMAND"
