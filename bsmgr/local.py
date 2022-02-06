@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from .core.exceptions import BeatSaberError, ModelError
-from .core.models import BsPlaylist, CustomLevel, BsInvalidLocal
+from .core.models import BsMap, BsPlaylist, CustomLevel, BsInvalidLocal
 
 
 class BeatSaberManager:
@@ -70,14 +70,27 @@ class BeatSaberManager:
 
     def get_playlist_by_key(self, key: str) -> Optional[BsPlaylist]:
         """Return playlist for given key if it exists."""
-    
-    def remove_playlist(self, playlist: BsPlaylist) -> None:
-        """Remove given playlist file."""
-        # TODO
+        for bplist in self.get_playlists():
+            if not isinstance(bplist, BsPlaylist):
+                continue
+            if bplist.key == key:
+                return bplist
+        return None
 
-    def install_playlist(self, playlist: BsPlaylist) -> None:
+    def remove_playlist(self, bpl: BsPlaylist) -> None:
+        """Remove given playlist file."""  # pylint: disable=no-self-use
+        try:
+            bpl.filepath.unlink()
+        except OSError as exc:
+            raise BeatSaberError("can't to remove playlist file", bpl) from exc
+
+    def install_playlist(self, bpl: BsPlaylist) -> None:
         """Write JSON playlist content to file in playlist directory."""
-        # TODO
+        bpl_dest = self.bpl_dir / bpl.filename
+        try:
+            bpl_dest.write_bytes(bpl.json_raw)
+        except OSError as exc:
+            raise BeatSaberError("cannot write playlist content", bpl) from exc
 
     def get_custom_lvl_dirs(self) -> List[Path]:
         """Return list with all custom level directories."""
@@ -92,14 +105,25 @@ class BeatSaberManager:
 
     def get_custom_level_by_key(self, key: str) -> Optional[CustomLevel]:
         """Return custom level for given key if it exists."""
-    
-    def remove_custom_level(self, lvl: Path) -> None:
-        """Delete an installed Beat Saber custom level."""
-        # TODO: exception handling
-        # - determine which exceptions shutil.rmtree can raise
+        for lvl in self.get_custom_levels():
+            if not isinstance(lvl, CustomLevel):
+                continue
+            if lvl.key == key:
+                return lvl
+        return None
 
-    def install_custom_level(self, lvl) -> None:
+    def remove_custom_level(self, lvl: CustomLevel) -> None:
+        """Remove level directory."""  # pylint: disable=no-self-use
+        try:
+            shutil.rmtree(lvl.directory)
+        except OSError as exc:
+            raise BeatSaberError("cannot remove custom level", lvl) from exc
+
+    def install_custom_level(self, lvl: BsMap) -> None:
         """Extract the zipped custom level contents to lvl directory."""
+        if lvl.content is None:
+            raise BeatSaberError("level has no content")
+        lvl.content.extractall(self.custom_lvl_dir / str(lvl))
 
 
 if __name__ == '__main__':
