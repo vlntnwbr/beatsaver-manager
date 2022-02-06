@@ -64,7 +64,7 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
     description: str
     url: str
     songs: Tuple[BsPlaylistItem]
-    _json: bytes
+    json_raw: bytes
     filepath = Optional[Path]
     key: str = dataclasses.field(init=False)
 
@@ -153,5 +153,3 @@ class BsMap(Model):
     def __str__(self) -> str:
         """Return the map's title made from its key, name and author."""
         return f"{self.key} ({self.name} - {self.author})"
-
-
