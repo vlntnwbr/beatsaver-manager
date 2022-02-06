@@ -30,6 +30,22 @@ class Model:
 
 
 @dataclasses.dataclass(repr=True)
+class CustomLevel(Model):
+    """Container for locally installed custom level data."""
+
+    directory: Path
+    key: str = dataclasses.field(init=False)
+
+    def __post_init__(self) -> None:
+        """Set key attribute derived from level directory name."""
+        self.key = self.directory.name.split(" ")[0]
+
+    def __str__(self) -> str:
+        """Return directory name as string representation of level."""
+        return self.directory.name
+
+
+@dataclasses.dataclass(repr=True)
 class BsPlaylistItem(Model):
     """Container for a song in a BeatSaver playlist."""
 
@@ -39,7 +55,7 @@ class BsPlaylistItem(Model):
 
 
 @dataclasses.dataclass(repr=True)
-class BsPlaylist(Model):
+class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
     """Container for playlist data from BeatSaver."""
 
     checksum: str
@@ -85,13 +101,16 @@ class BsPlaylist(Model):
     def filename(self) -> str:
         """Return filename from filepath or construct it using key."""
         if self.filepath is not None:
-            return self.filepath.name
-        else:  # like BSMG ModAssistant OneClick filename
-            return f"beatsaver-{self.key}.bplist"
-    
+            return self.filepath.name  # pylint: disable=no-member
+        return f"beatsaver-{self.key}.bplist"
+
     def __str__(self) -> str:
         """Return bplist filename for playlist."""
         return f"BeatSaver - {self.title}.bplist"
+
+    def contains_song(self, song: CustomLevel) -> bool:
+        """Return true if playlist contains given song."""
+        return song.key in self.song_keys
 
 
 @dataclasses.dataclass(repr=True)
@@ -136,17 +155,3 @@ class BsMap(Model):
         return f"{self.key} ({self.name} - {self.author})"
 
 
-@dataclasses.dataclass(repr=True)
-class CustomLevel(Model):
-    """Container for locally installed custom level data."""
-
-    directory: Path
-    key: str = dataclasses.field(init=False)
-
-    def __post_init__(self) -> None:
-        """Set key attribute derived from level directory name."""
-        self.key = self.directory.name.split(" ")[0]
-
-    def __str__(self) -> str:
-        """Return directory name as string representation of level."""
-        return self.directory.name
