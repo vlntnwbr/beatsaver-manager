@@ -37,7 +37,7 @@ class BeatSaverApi:
         """Download a playlist referenced by url."""
         response = self._get_beatsaver_url(url)
         try:
-            bplist = BsPlaylist.from_json(response.content)
+            bplist = BsPlaylist.from_json(response)
             return bplist
         except ModelError as exc:
             raise BeatSaverApiError("playlist data invalid") from exc
