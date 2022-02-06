@@ -106,7 +106,7 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
 
     def __str__(self) -> str:
         """Return bplist filename for playlist."""
-        return f"BeatSaver - {self.title}.bplist"
+        return self.title
 
     def contains_song(self, song: CustomLevel) -> bool:
         """Return true if playlist contains given song."""
