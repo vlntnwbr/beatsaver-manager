@@ -37,7 +37,8 @@ class BeatSaberManager:
         self.custom_lvl_dir = directory / "Beat Saber_Data" / "CustomLevels"
         for bs_dir in (self.bpl_dir, self.custom_lvl_dir):
             try:
-                bs_dir.mkdir(parents=True)
+                if not bs_dir.is_dir():
+                    bs_dir.mkdir(parents=True)
             except FileExistsError as exc:
                 err = "directory path points to an existing file"
                 raise BeatSaberError(err, bs_dir) from exc
