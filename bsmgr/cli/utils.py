@@ -23,7 +23,6 @@ from typing import Optional
 
 def valid_beatsaber_dir(path: Optional[str]) -> Path:
     """Return absolute path if it points to existing directory."""
-    print(path)
     if path == "NOT_SET":
         raise ArgError("BEATSABER environment variable is not set")
     arg_path = Path(path).resolve()
@@ -92,11 +91,11 @@ class CommandLineInterface:
         )
         bpl.add_argument(
             "--keys", action="store_true",
-            help="set this to treat all playlist arguments as beatsaver keys"
+            help="set this to treat all playlist arguments as BeatSaver keys"
         )
         bpl.add_argument(
             "--files", action="store_true",
-            help="set this to treat all playlist arguments as paths to files"
+            help="set this to treat all playlist arguments as filepaths"
         )
         bpl.add_argument(
             "-f", "--force", action="store_true",
@@ -104,7 +103,7 @@ class CommandLineInterface:
         )
         self.add_pos_arg(
             bpl, "playlist",
-            "one (or more) beatsaver url(s) for playlist(s) to be installed"
+            "one (or more) BeatSaver url(s) for playlist(s) to be installed"
         )
 
     def _bpl_list(self) -> None:
@@ -115,7 +114,7 @@ class CommandLineInterface:
             help="set this to only display outdated playlists"
         )
 
-    def _bpl_remove(self) -> None:  # TODO
+    def _bpl_remove(self) -> None:
         """Set up 'bpl remove' command."""
         bpl = self.add_bpl_cmd(
             "rm", "remove a playlist and all its unique songs"
@@ -123,6 +122,14 @@ class CommandLineInterface:
         bpl.add_argument(
             "--keep-songs", action="store_true",
             help="set this to skip deletion of playlist songs"
+        )
+        bpl.add_argument(
+            "--files", action="store_true",
+            help="set this to treat all playlist arguments as filepaths"
+        )
+        self.add_pos_arg(
+            bpl, "playlist",
+            "one (or more) BeatSaver playlist keys for playlists to be removed"
         )
 
     def _bpl_upgrade(self) -> None:
@@ -153,7 +160,7 @@ class CommandLineInterface:
         )
         self.add_pos_arg(
             lvl, "level",
-            "one (or more) beatsaver url(s) for level(s) to be installed"
+            "one (or more) BeatSaver url(s) for level(s) to be installed"
         )
 
     def _lvl_list(self) -> None:
@@ -164,12 +171,20 @@ class CommandLineInterface:
             help="set this to check whether each song is in a playlist"
         )
 
-    def _lvl_remove(self) -> None:  # TODO
+    def _lvl_remove(self) -> None:
         """Set up 'lvl remove' command."""
         lvl = self.add_lvl_cmd("rm", "remove a custom level not in a playlist")
         lvl.add_argument(
             "-f", "--force", action="store_true",
             help="forces deletion of all given levels even if in a playlist"
+        )
+        lvl.add_argument(
+            "--files", action="store_true",
+            help="set this to treat all level arguments as directory paths"
+        )
+        self.add_pos_arg(
+            lvl, "level",
+            "one (or more) BeatSaver key for custom level to be removed"
         )
 
     def _bpl_lvl_sync(self) -> None:
@@ -195,11 +210,11 @@ class CommandLineInterface:
         cli = cls()
         cli._bpl_install()
         cli._bpl_list()
-        # cli._bpl_remove()  # TODO
+        cli._bpl_remove()
         cli._bpl_upgrade()
         cli._lvl_install()
         cli._lvl_list()
-        # cli._lvl_remove()  # TODO
+        cli._lvl_remove()
         cli._bpl_lvl_sync()
         return cli.parser
 
