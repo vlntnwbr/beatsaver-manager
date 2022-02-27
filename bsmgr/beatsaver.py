@@ -55,16 +55,13 @@ class BeatSaverApi:
         """Download zipped custom level data referenced by url."""
         response = self._get_beatsaver_url(bsmap.url)
         try:
-            with BytesIO(response) as content:
-                lvl = ZipFile(content)  # pylint: disable=consider-using-with
-            return bsmap.add_content(lvl)
+            return bsmap.add_content(ZipFile(BytesIO(response)))
         except BadZipFile as exc:
-            raise BeatSaverApiError("content is not a valid zipfile") from exc
+            raise BeatSaverApiError("level data is not a valid zip") from exc
 
-    def _get_beatsaver_url(self, url: str) -> bytes:
+    @staticmethod
+    def _get_beatsaver_url(url: str) -> bytes:
         """Return response content of Beat Saver GET request to url."""
-        if not url.startswith(self.base_url):
-            raise BeatSaverApiError("invalid beatsaver url", url)
         try:
             response = requests.get(url)
             response.raise_for_status()

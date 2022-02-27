@@ -65,7 +65,7 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
     url: str
     songs: Tuple[BsPlaylistItem]
     json_raw: bytes
-    filepath = Optional[Path]
+    filepath: Optional[Path] = None
     key: str = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
@@ -139,7 +139,7 @@ class BsMap(Model):
             key = lvl["id"]
             title = lvl["name"]
             author = lvl["uploader"]["name"]
-            url = lvl["downloadURL"]
+            url = lvl["versions"][-1]["downloadURL"]
             return cls(key, title, author, url)
         except json.JSONDecodeError as exc:
             raise ModelError("can't parse json data") from exc
