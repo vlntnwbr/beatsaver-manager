@@ -53,6 +53,10 @@ class BsPlaylistItem(Model):
     hash: str
     name: str
 
+    def __str__(self) -> str:
+        """Return name of song"""
+        return self.name
+
 
 @dataclasses.dataclass(repr=True)
 class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes

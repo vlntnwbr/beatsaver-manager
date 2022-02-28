@@ -17,7 +17,7 @@ import os
 import shutil
 
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .core.exceptions import BeatSaberError, ModelError
 from .core.models import BsMap, BsPlaylist, CustomLevel, BsInvalidLocal
@@ -53,27 +53,26 @@ class BeatSaberManager:
             if bpl.is_file() and bpl.suffix == self.playlist_ext
         ]
 
-    def get_playlists(self) -> List[BsPlaylist | BsInvalidLocal]:
+    def get_playlists(self) -> Tuple[List[BsPlaylist], List[BsInvalidLocal]]:
         """Return list with all playlists of given installation."""
         playlist_files = self.get_bpl_files()
         bplists = []
+        invalids = []
         for playlist in playlist_files:
             try:
                 content = playlist.read_bytes()
                 bplists.append(BsPlaylist.from_json(content))
             except (OSError, ModelError) as exc:
-                bplists.append(BsInvalidLocal(playlist, exc))
-        return bplists
+                invalids.append(BsInvalidLocal(playlist, exc))
+        return bplists, invalids
 
     def get_playlist_names(self) -> List[str]:
         """Return list with all playlist names of given installation."""
-        return [bpl.title for bpl in self.get_playlists()]
+        return [bpl.title for bpl in self.get_playlists()[0]]
 
     def get_playlist_by_key(self, key: str) -> Optional[BsPlaylist]:
         """Return playlist for given key if it exists."""
-        for bplist in self.get_playlists():
-            if not isinstance(bplist, BsPlaylist):
-                continue
+        for bplist in self.get_playlists()[0]:
             if bplist.key == key:
                 return bplist
         return None
@@ -100,7 +99,7 @@ class BeatSaberManager:
             if lvl.is_dir() and lvl.name not in self.default_songs
         ]
 
-    def get_custom_levels(self) -> List[CustomLevel | BsInvalidLocal]:
+    def get_custom_levels(self) -> List[CustomLevel]:
         """Return keys of all installed songs from directory names."""
         return [CustomLevel(lvl) for lvl in self.get_custom_lvl_dirs()]
 
