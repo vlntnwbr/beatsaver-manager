@@ -34,15 +34,17 @@ class CustomLevel(Model):
     """Container for locally installed custom level data."""
 
     directory: Path
-    key: str = dataclasses.field(init=False)
+    name: str = dataclasses.field(init=False)
+    title: str = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
-        """Set key attribute derived from level directory name."""
-        self.key = self.directory.name.split(" ")[0]
+        """Set key and title attribute derived from level directory."""
+        self.key, title = self.directory.name.split(" ", 1)
+        self.title = title[1:-1]
 
     def __str__(self) -> str:
         """Return directory name as string representation of level."""
-        return self.directory.name
+        return self.directory.name.split(" ", 1)[1]
 
 
 @dataclasses.dataclass(repr=True)

@@ -18,7 +18,9 @@ import os
 from argparse import ArgumentParser, RawDescriptionHelpFormatter, \
     ArgumentTypeError as ArgError, _SubParsersAction as SubParser
 from pathlib import Path
+from typing import Iterable
 
+from ..core.models import BsPlaylist, CustomLevel
 from ..core.utils import LOG_LEVELS
 
 
@@ -28,6 +30,7 @@ def valid_log_level(level: str) -> str:
         choices = ", ".join(f"'{lvl}'" for lvl in valid_keys)
         msg = f"invalid choice: '{level}' (choose from {choices})"
         raise ArgError(msg)
+    return level
 
 
 def valid_beatsaber_dir(path: str) -> Path:
@@ -238,7 +241,94 @@ class CommandLineInterface:
         return cli.parser
 
 
-if __name__ == '__main__':
-    parser = CommandLineInterface.setup()
-    args = parser.parse_args()
-    print(args)
+class TablePrinter:
+    """Base class for printing a list as a table."""
+
+    def __init__(self) -> None:
+        """Create the Printer."""
+        self.col_title = "TITLE"
+        self.col_key = "KEY"
+        self.table_row = ""
+        self.printing_table = []
+
+    def print(self) -> None:
+        """Print all rows of printing table."""
+        print("\n" + "\n".join(self.printing_table))
+
+    def add_row(self, row: str) -> None:
+        """Append a row to the printing table."""
+        self.printing_table.append(row)
+
+
+class LvlListPrinter(TablePrinter):
+    """Container for collecting and printing installed custom levels."""
+
+    def __init__(self, check_bpls: bool) -> None:
+        """Create the printer with or without playlist column."""
+        self.bpl_check = check_bpls
+        self.col_playlists = "PLAYLISTS"
+        super().__init__()
+        self._init_printing_table()
+
+    def append(self, lvl: CustomLevel, bpls: Iterable[str] = ()) -> None:
+        """Append a table row for a custom level the printing table."""
+        if self.bpl_check:
+            self._add_bpl_row(lvl.key, lvl.title, ", ".join(bpls))
+        else:
+            self._add_lvl_row(lvl.key, lvl.title)
+
+    def _init_printing_table(self) -> None:
+        """Format table row and add head of printing table."""
+        if self.bpl_check:
+            self.table_row = "| {:6} | {:80} | {:24} |"
+            self._add_bpl_row(self.col_key, self.col_title, self.col_playlists)
+            self._add_bpl_row("-" * 6, "-" * 80, "-" * 24)
+        else:
+            self.table_row = "| {:6} | {:107} |"
+            self._add_lvl_row(self.col_key, self.col_title)
+            self._add_lvl_row("-" * 6, "-" * 107)
+
+    def _add_bpl_row(self, key: str, title: str, playlists: str) -> None:
+        """Append a row with playlist column to printing table."""
+        self.add_row(self.table_row.format(key, title, playlists))
+
+    def _add_lvl_row(self, key: str, title: str) -> None:
+        """Append a row without playlist column to printing table."""
+        self.add_row(self.table_row.format(key, title))
+
+
+class BplListPrinter(TablePrinter):
+    """Container for collecting and printing installed playlists."""
+
+    def __init__(self, outdated: bool) -> None:
+        """Create printer with or without outdated column."""
+        self.outdated = outdated
+        self.col_old = "OUTDATED"
+        super().__init__()
+        self._init_printing_table()
+
+    def append(self, bpl: BsPlaylist, outdated: bool = False) -> None:
+        """Append row for a playlist to printing table."""
+        if self.outdated:
+            self._add_outdated_row(bpl.key, bpl.title, "x" if outdated else "")
+        else:
+            self._add_standard_row(bpl.key, bpl.title)
+
+    def _init_printing_table(self) -> None:
+        """Format table row and add head of printing table."""
+        if self.outdated:
+            self.table_row = "| {:4} | {:98} | {:^8} |"
+            self._add_outdated_row(self.col_key, self.col_title, self.col_old)
+            self._add_outdated_row("-" * 4, "-" * 98, "-" * 8)
+        else:
+            self.table_row = "| {:4} | {:109} |"
+            self._add_standard_row(self.col_key, self.col_title)
+            self._add_standard_row("-" * 4, "-" * 109)
+
+    def _add_outdated_row(self, key: str, name: str, outdated: str) -> None:
+        """Append a row with outdated column to printing table."""
+        self.add_row(self.table_row.format(key, name, outdated))
+
+    def _add_standard_row(self, key: str, name: str) -> None:
+        """Append a row without outdated column to printing table."""
+        self.add_row(self.table_row.format(key, name))
