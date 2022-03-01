@@ -52,7 +52,7 @@ jobs:
     - name: Run Pylint
       if: ${{ github.ref == 'refs/heads/master' }}
       id: pylint
-      run: pipenv run pylint -f colorized ${{ steps.prep.outputs.package }} setup.py || pipenv run pylint-exit -efail -wfail $?
+      run: pipenv run pylint -f colorized ${{ steps.prep.outputs.package }} setup.py
     - name: Build Source Distribution
       id: build
       run: |

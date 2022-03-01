@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6645132b5a4b3a74457c3dfc8439d785e64021aba4b57719f85933f904b0a6fa"
+            "sha256": "c46e4a4fc706946c3bb0c390c71caa710b9de8086b7de16332b76f02232e546d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -67,18 +67,18 @@
         },
         "bandit": {
             "hashes": [
-                "sha256:6d11adea0214a43813887bfe71a377b5a9955e4c826c8ffd341b494e3ab25260",
-                "sha256:e20402cadfd126d85b68ed4c8862959663c8c372dbbb1fca8f8e2c9f55a067ec"
+                "sha256:3ce9b4e6a4f7f41aa966c9543e635dd35e52a793a47e746f0c55c7ecfc69d7e8",
+                "sha256:58772ca951bf1129dda8a280d351547de832720bf7b5c29fac3103927980b8a6"
             ],
             "index": "pypi",
-            "version": "==1.7.2"
+            "version": "==1.7.3"
         },
         "colorama": {
             "hashes": [
                 "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b",
                 "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"
             ],
-            "markers": "platform_system == 'Windows'",
+            "markers": "sys_platform == 'win32'",
             "version": "==0.4.4"
         },
         "flake8": {
@@ -210,14 +210,6 @@
             ],
             "index": "pypi",
             "version": "==2.12.2"
-        },
-        "pylint-exit": {
-            "hashes": [
-                "sha256:65c9e7856e9058705a92d7c45628d604b2a4b8ee2b3c18a7303be77f9ed87cbe",
-                "sha256:b6ad02884c01c5560a5275079fe5a6c792afff90ecccf0c02513e1547ee280b0"
-            ],
-            "index": "pypi",
-            "version": "==1.2.0"
         },
         "pyyaml": {
             "hashes": [
