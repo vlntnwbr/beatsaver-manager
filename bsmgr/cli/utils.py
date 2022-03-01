@@ -18,10 +18,19 @@ import os
 from argparse import ArgumentParser, RawDescriptionHelpFormatter, \
     ArgumentTypeError as ArgError, _SubParsersAction as SubParser
 from pathlib import Path
-from typing import Optional
+
+from ..core.utils import LOG_LEVELS
 
 
-def valid_beatsaber_dir(path: Optional[str]) -> Path:
+def valid_log_level(level: str) -> str:
+    """Raise ArgumentTypeError if levelname is not a valid log level."""
+    if not level in (valid_keys := LOG_LEVELS.keys()):
+        choices = ", ".join(f"'{lvl}'" for lvl in valid_keys)
+        msg = f"invalid choice: '{level}' (choose from {choices})"
+        raise ArgError(msg)
+
+
+def valid_beatsaber_dir(path: str) -> Path:
     """Return absolute path if it points to existing directory."""
     if path == "NOT_SET":
         raise ArgError("BEATSABER environment variable is not set")
@@ -39,6 +48,8 @@ class CommandLineInterface:
         self.help_msg = "(use '-h' option for details)"
         self.formatter = RawDescriptionHelpFormatter
         self.epilog = "\n".join((
+            "--log-level argument defaults to 'info' and can also be set with",
+            "the environment variable $BSDL_LOG_LEVEL", "",
             "--beatsaber argument defaults to environment variable $BEATSABER",
             "If the variable is not set, the argument MUST be provided"
         ))
@@ -54,6 +65,14 @@ class CommandLineInterface:
             default=os.getenv("BEATSABER", "NOT_SET"),
             type=valid_beatsaber_dir,
             metavar="<dir>"
+        )
+        self.parser.add_argument(
+            "--log-level",
+            help=f"set the logging level ({', '.join(LOG_LEVELS.keys())})",
+            choices=LOG_LEVELS.keys(),
+            default=os.getenv("BSDL_LOG_LEVEL", "info"),
+            type=valid_log_level,
+            metavar="<level>"
         )
         main = self.parser.add_subparsers(
             dest="command", required=True, metavar="<command>"

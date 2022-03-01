@@ -38,11 +38,10 @@ def get_file_checksum(filename: str) -> str:
     return get_checksum(content)
 
 
-def setup_logging(level: str) -> None:  # TODO
+def setup_logging(level: str) -> None:
     """Set up logging stream handler with given level."""
     logging.basicConfig(
-        format="%(levelname)-8s - %(name)-11s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        format="%(name)s | %(levelname)-8s |  %(message)s",
         level=LOG_LEVELS[level.lower()]
     )
 
