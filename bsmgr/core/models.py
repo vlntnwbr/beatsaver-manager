@@ -54,7 +54,7 @@ class BsPlaylistItem(Model):
     name: str
 
     def __str__(self) -> str:
-        """Return name of song"""
+        """Return name of song."""
         return self.name
 
 

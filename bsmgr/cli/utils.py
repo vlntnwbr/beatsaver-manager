@@ -24,7 +24,7 @@ from ..core.utils import LOG_LEVELS
 
 def valid_log_level(level: str) -> str:
     """Raise ArgumentTypeError if levelname is not a valid log level."""
-    if not level in (valid_keys := LOG_LEVELS.keys()):
+    if level not in (valid_keys := LOG_LEVELS):
         choices = ", ".join(f"'{lvl}'" for lvl in valid_keys)
         msg = f"invalid choice: '{level}' (choose from {choices})"
         raise ArgError(msg)
