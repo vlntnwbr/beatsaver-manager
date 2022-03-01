@@ -61,7 +61,7 @@ class BeatSaberManager:
         for playlist in playlist_files:
             try:
                 content = playlist.read_bytes()
-                bplists.append(BsPlaylist.from_json(content))
+                bplists.append(BsPlaylist.from_json(content, playlist))
             except (OSError, ModelError) as exc:
                 invalids.append(BsInvalidLocal(playlist, exc))
         return bplists, invalids

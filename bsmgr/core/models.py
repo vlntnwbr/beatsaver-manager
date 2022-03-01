@@ -79,20 +79,20 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
         self.key = self.url.rsplit("/", 2)[-2]
 
     @classmethod
-    def from_json(cls, content: bytes):
+    def from_json(cls, raw: bytes, filepath: Optional[Path] = None):
         """Return instance of class built from json content."""
         try:
-            bplist = json.loads(content)
-            checksum = get_checksum(content)
+            bplist = json.loads(raw)
+            checksum = get_checksum(raw)
             title = bplist["playlistTitle"]
             author = bplist["playlistAuthor"]
             desc = bplist["playlistDescription"]
             url = bplist["customData"]["syncURL"]
-            songs = tuple(
+            lvls = tuple(
                 BsPlaylistItem(s["key"], s["hash"], s["songName"])
                 for s in bplist["songs"]
             )
-            return cls(checksum, title, author, desc, url, songs, content)
+            return cls(checksum, title, author, desc, url, lvls, raw, filepath)
         except json.JSONDecodeError as exc:
             raise ModelError("can't parse json data") from exc
         except KeyError as exc:
