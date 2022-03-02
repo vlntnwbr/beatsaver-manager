@@ -44,7 +44,11 @@ class BeatSaverApi:
 
     def get_song_by_key(self, key: str) -> BsMap:
         """Download the metadata of a custom level referenced by key."""
-        response = self._get_beatsaver_url(self._format_song_url(key))
+        return self.get_song_from_url(self._format_song_url(key))
+
+    def get_song_from_url(self, url: str) -> BsMap:
+        """Download the metadata of a custom level referenced by url."""
+        response = self._get_beatsaver_url(url)
         try:
             lvl = BsMap.from_json(response)
             return lvl
