@@ -173,10 +173,6 @@ class CommandLineInterface:
             help="set this to treat all level arguments as BeatSaver keys"
         )
         lvl.add_argument(
-            "--files", action="store_true",
-            help="set this to treat all level arguments as paths to zip files"
-        )
-        lvl.add_argument(
             "-f", "--force", action="store_true",
             help="set this to force install, overwriting any existing level"
         )
