@@ -164,6 +164,10 @@ class CommandLineInterface:
             "--remove-songs", action="store_true",
             help="set this to remove songs that were unique to playlists"
         )
+        bpl.add_argument(
+            "--bpl", help="only upgrade the local playlists with these keys",
+            nargs="+", metavar="<key>", dest="playlist"
+        )
 
     def _lvl_install(self) -> None:
         """Set up 'lvl install' command."""
