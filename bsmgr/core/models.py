@@ -48,7 +48,7 @@ class CustomLevel(Model):
 
 
 @dataclasses.dataclass(repr=True)
-class BsPlaylistItem(Model):
+class PlaylistItem(Model):
     """Container for a song in a BeatSaver playlist."""
 
     key: str
@@ -69,7 +69,7 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
     author: str
     description: str
     url: str
-    songs: Tuple[BsPlaylistItem]
+    songs: Tuple[PlaylistItem]
     json_raw: bytes
     filepath: Optional[Path] = None
     key: str = dataclasses.field(init=False)
@@ -89,7 +89,7 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
             desc = bplist["playlistDescription"]
             url = bplist["customData"]["syncURL"]
             lvls = tuple(
-                BsPlaylistItem(s["key"], s["hash"], s["songName"])
+                PlaylistItem(s["key"], s["hash"], s["songName"])
                 for s in bplist["songs"]
             )
             return cls(checksum, title, author, desc, url, lvls, raw, filepath)
