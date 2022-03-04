@@ -126,7 +126,7 @@ class BeatSaberManager:
         """Extract the zipped custom level contents to lvl directory."""
         if lvl.content is None:
             raise BeatSaberError(f"level has no content: {lvl.name}")
-        lvl_path = self.custom_lvl_dir / str(lvl)
+        lvl_path = self.custom_lvl_dir / lvl.directory
         try:
             lvl.content.extractall(lvl_path)
         except OSError as exc:

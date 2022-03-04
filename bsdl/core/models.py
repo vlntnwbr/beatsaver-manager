@@ -35,16 +35,15 @@ class CustomLevel(Model):
 
     directory: Path
     name: str = dataclasses.field(init=False)
-    title: str = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
         """Set key and title attribute derived from level directory."""
-        self.key, title = self.directory.name.split(" ", 1)
-        self.title = title[1:-1]
+        self.key, name = self.directory.name.split(" ", 1)
+        self.name = name[1:-1]
 
     def __str__(self) -> str:
         """Return directory name as string representation of level."""
-        return self.directory.name.split(" ", 1)[1]
+        return self.name
 
 
 @dataclasses.dataclass(repr=True)
@@ -156,6 +155,11 @@ class BsMap(Model):
         """Return new object with added beatmap data as zipfile."""
         return dataclasses.replace(self, content=content)
 
+    @property
+    def directory(self) -> Path:
+        """Return the map's directory path as: 'key (name - author)'."""
+        return Path(f"{self.key} ({self.name} - {self.author})" )
+    
     def __str__(self) -> str:
-        """Return the map's title made from its key, name and author."""
-        return f"{self.key} ({self.name} - {self.author})"
+        """Return the name of the map."""
+        return self.name
