@@ -158,8 +158,8 @@ class BsMap(Model):
     @property
     def directory(self) -> Path:
         """Return the map's directory path as: 'key (name - author)'."""
-        return Path(f"{self.key} ({self.name} - {self.author})" )
-    
+        return Path(f"{self.key} ({self.name} - {self.author})")
+
     def __str__(self) -> str:
         """Return the name of the map."""
         return self.name

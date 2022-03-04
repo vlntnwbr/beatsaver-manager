@@ -125,7 +125,7 @@ class BeatSaberManager:
     def install_custom_level(self, lvl: BsMap) -> None:
         """Extract the zipped custom level contents to lvl directory."""
         if lvl.content is None:
-            raise BeatSaberError(f"level has no content: {lvl.name}")
+            raise BeatSaberError("level has no content")
         lvl_path = self.custom_lvl_dir / lvl.directory
         try:
             lvl.content.extractall(lvl_path)

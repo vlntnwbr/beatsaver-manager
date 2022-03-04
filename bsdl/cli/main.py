@@ -28,10 +28,11 @@ def main() -> None:
     command, action = args.command, args.subcommand
     setup_logging(args.log_level)
     logger = logging.getLogger(f"{command}-{action}")
+    logger.debug("BEATSABER_DIRECTORY: ", args.beatsaber)
     try:
         cmd = CliCommands(args.beatsaber, logger)
     except BeatSaberError as exc:
-        logger.error("cannot create Beat Saber Subdirectory: %s", exc)
+        logger.error("Can't Create Beat Saber Subdirectory: %s", exc)
         logger.debug("%r", exc, exc_info=1)
         return
     if action == "sync":
@@ -39,7 +40,7 @@ def main() -> None:
     elif command == "bpl":
         if action == "install":
             if args.keys and args.files:
-                cli.error("cannot set --keys and --files together")
+                cli.error("can't set --keys and --files together")
             kind = "keys" if args.keys else "files" if args.files else "urls"
             cmd.bpl_install(args.playlist, kind, args.force)
         elif action == "list":
