@@ -31,7 +31,7 @@ def main() -> None:
     try:
         cmd = CliCommands(args.beatsaber, logger)
     except BeatSaberError as exc:
-        logger.error("cannot create Beat Saber Subdirectory: %s", exc.args[0])
+        logger.error("cannot create Beat Saber Subdirectory: %s", exc)
         logger.debug("%r", exc, exc_info=1)
         return
     if action == "sync":

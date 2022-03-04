@@ -40,11 +40,11 @@ class BeatSaberManager:
                 if not bs_dir.is_dir():
                     bs_dir.mkdir(parents=True)
             except FileExistsError as exc:
-                err = "directory path points to an existing file"
-                raise BeatSaberError(err, bs_dir) from exc
+                err = f"directory path points to an existing file: {bs_dir}"
+                raise BeatSaberError(err) from exc
             except PermissionError as exc:
-                err = "access to Beat Saber directory denied"
-                raise BeatSaberError(err, bs_dir) from exc
+                err = f"access to directory denied: {bs_dir}"
+                raise BeatSaberError(err) from exc
 
     def get_bpl_files(self) -> List[Path]:
         """Return list of all bplist filepaths of given installation."""
@@ -82,7 +82,8 @@ class BeatSaberManager:
         try:
             bpl.filepath.unlink()
         except OSError as exc:
-            raise BeatSaberError("can't to remove playlist file", bpl) from exc
+            err_msg = f"can't remove playlist file: {exc.args[0]}"
+            raise BeatSaberError(err_msg) from exc
 
     def install_playlist(self, bpl: BsPlaylist) -> None:
         """Write JSON playlist content to file in playlist directory."""
@@ -90,7 +91,8 @@ class BeatSaberManager:
         try:
             bpl_dest.write_bytes(bpl.json_raw)
         except OSError as exc:
-            raise BeatSaberError("cannot write playlist content", bpl) from exc
+            err_msg = f"can't write playlist content: {exc.args[0]}"
+            raise BeatSaberError(err_msg) from exc
 
     def get_custom_lvl_dirs(self) -> List[Path]:
         """Return list with all custom level directories."""
@@ -117,19 +119,21 @@ class BeatSaberManager:
         try:
             shutil.rmtree(lvl.directory)
         except OSError as exc:
-            raise BeatSaberError("cannot remove custom level", lvl) from exc
+            err_msg = f"can't remove custom level: {exc.args[0]}"
+            raise BeatSaberError(err_msg) from exc
 
     def install_custom_level(self, lvl: BsMap) -> None:
         """Extract the zipped custom level contents to lvl directory."""
         if lvl.content is None:
-            raise BeatSaberError("level has no content")
+            raise BeatSaberError(f"level has no content: {lvl.name}")
         lvl_path = self.custom_lvl_dir / str(lvl)
         try:
             lvl.content.extractall(lvl_path)
         except OSError as exc:
             if lvl_path.exists():
                 lvl_path.unlink()
-            raise BeatSaberError("can't extract content", lvl.name) from exc
+            err_msg = f"can't extract level content: {exc.args[0]}"
+            raise BeatSaberError(err_msg) from exc
 
 
 if __name__ == '__main__':

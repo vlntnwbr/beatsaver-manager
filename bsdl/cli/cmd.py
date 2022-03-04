@@ -54,8 +54,8 @@ class CliCommands(BeatSaberManager):
                     self.remove_custom_level(lvl)
                     self.log.info("removed level")
                 except BeatSaberError as exc:
-                    self.log.error("unable to remove custom level %s", lvl)
-                    self.log.debug("%s", exc, exc_info=1)
+                    self.log.error("unable to remove custom level: %s", exc)
+                    self.log.debug("%r", exc, exc_info=1)
 
     def bpl_install(self, bpl_list: List[str], kind: str, force: bool) -> None:
         """Install given playlists under specified parameters."""
@@ -76,13 +76,17 @@ class CliCommands(BeatSaberManager):
                 self.install_playlist(bpl)
                 self._install_playlist_songs(bpl)
             except BeatSaberError as exc:
-                self.log.debug("%s", exc, exc_info=1)
+                self.log.error("unable to install playlist: %s", exc)
+                self.log.debug("%r", exc, exc_info=1)
             except BeatSaverApiError as exc:
-                self.log.debug("%s", exc, exc_info=1)
+                self.log.error("unable to download playlist: %s", exc)
+                self.log.debug("%r", exc, exc_info=1)
             except ModelError as exc:
-                self.log.debug("%s", exc, exc_info=1)
+                self.log.error("unable to read playlist: %s", exc)
+                self.log.debug("%r", exc, exc_info=1)
             except OSError as exc:
-                self.log.debug("%s", exc, exc_info=1)
+                self.log.error("unable to read playlist file: %s", exc.args[0])
+                self.log.debug("%r", exc, exc_info=1)
 
     def bpl_list(self, outdated: bool) -> None:
         """Print information about all installed playlists."""
@@ -99,7 +103,8 @@ class CliCommands(BeatSaberManager):
                     printer.append(bpl, is_outdated)
                     continue
                 except BeatSaverApiError as exc:
-                    self.log.error("can't fetch %s from Beat Saver", bpl)
+                    err_msg = "can't download playlist: %s: %s"
+                    self.log.error(err_msg, bpl, exc)
                     self.log.debug("%r", exc, exc_info=1)
             printer.append(bpl)
         printer.print()
@@ -120,8 +125,11 @@ class CliCommands(BeatSaberManager):
                 try:
                     filepath = Path(bpl_ref).resolve()
                     bpl = BsPlaylist.from_json(filepath.read_bytes(), filepath)
-                except (OSError, ModelError) as exc:
-                    self.log.error("unable to read playlist %s", bpl_ref)
+                except ModelError as exc:
+                    self.log.error("can't construct playlist: %s", exc.args[0])
+                    self.log.debug("%r", exc, exc_info=1)
+                except OSError as exc:
+                    self.log.error("can't read playlist file: %s", exc.args[0])
                     self.log.debug("%r", exc, exc_info=1)
                     continue
             else:
@@ -133,7 +141,7 @@ class CliCommands(BeatSaberManager):
             try:
                 self.remove_playlist(bpl)
             except BeatSaberError as exc:
-                self.log.error("cannot uninstall playlist %s", bpl)
+                self.log.error("cannot uninstall playlist: %s: %s", bpl, exc)
                 self.log.debug("%r", exc, exc_info=1)
                 continue
             if not keep:
@@ -166,7 +174,7 @@ class CliCommands(BeatSaberManager):
             try:
                 remote_bpl = self.api.get_playlist_from_url(bpl.url)
             except BeatSaverApiError as exc:
-                self.log.error("cannot check playlist: %s", exc.args[0])
+                self.log.error("cannot check playlist: %s", exc)
                 self.log.debug("%r", exc, exc_info=1)
                 continue
             if remote_bpl.checksum == bpl.checksum:
@@ -176,7 +184,7 @@ class CliCommands(BeatSaberManager):
             try:
                 self.install_playlist(remote_bpl)
             except BeatSaberError as exc:
-                self.log.error("unable to install playlist")
+                self.log.error("unable to install playlist: %s: %s", bpl, exc)
                 self.log.debug("%r", exc, exc_info=1)
                 continue
             self._install_playlist_songs(remote_bpl)
@@ -193,7 +201,7 @@ class CliCommands(BeatSaberManager):
                 else:
                     lvl = self.api.get_song_from_url(lvl_ref)
             except BeatSaverApiError as exc:
-                self.log.error("unable to fetch level data: %s", exc.args[0])
+                self.log.error("unable to fetch level data: %s", exc)
                 self.log.debug("%r", exc, exc_info=1)
                 continue
             self.log.info("installing level: %s", lvl.name)
@@ -206,10 +214,10 @@ class CliCommands(BeatSaberManager):
                 self.log.info("extracting level data")
                 self.install_custom_level(lvl_map)
             except BeatSaverApiError as exc:
-                self.log.error("unable to download map data: %s", exc.args[0])
+                self.log.error("unable to download map data: %s", exc)
                 self.log.debug("%r", exc, exc_info=1)
             except BeatSaberError as exc:
-                self.log.error("unable to extract level data: %s", exc.args[0])
+                self.log.error("unable to extract level data: %s", exc)
                 self.log.debug("%r", exc, exc_info=1)
 
     def lvl_list(self, check_bpls: bool) -> None:
@@ -241,14 +249,14 @@ class CliCommands(BeatSaberManager):
                 if kind == "files":
                     lvl_dir = Path(lvl_ref).resolve()
                     if not lvl_dir.is_dir():
-                        raise BeatSaberError
+                        raise BeatSaberError("directory doesn't exist")
                     lvl = CustomLevel(lvl_dir)
                 else:
                     lvl = self.get_custom_level_by_key(lvl_ref)
                     if lvl is None:
-                        raise BeatSaberError
-            except BeatSaberError:
-                self.log.error("unable to locate level %s", lvl_ref)
+                        raise BeatSaberError("level is not installed")
+            except BeatSaberError as exc:
+                self.log.error("can't locate level: %s: %s", exc, lvl_ref)
                 continue
             self.log.info("trying to remove level %s", lvl.title)
             if not force and any(bpl.contains_song(lvl) for bpl in bpl_list):
@@ -257,7 +265,7 @@ class CliCommands(BeatSaberManager):
             try:
                 self.remove_custom_level(lvl)
             except BeatSaberError as exc:
-                self.log.error("unable to remove custom level")
+                self.log.error("can't remove level: %s: %s", exc, lvl_ref)
                 self.log.debug("%r", exc, exc_info=1)
 
     def _install_playlist_songs(self, bpl: BsPlaylist) -> None:
@@ -311,7 +319,7 @@ class CliCommands(BeatSaberManager):
             try:
                 self.remove_custom_level(lvl)
             except BeatSaberError as exc:
-                self.log.error("unable to remove level")
+                self.log.error("unable to remove level: %s: %s", lvl.name, exc)
                 self.log.debug("%r", exc, exc_info=1)
 
     def _bpl_items_to_lvls(self, bpl: List[PlaylistItem]) -> List[CustomLevel]:

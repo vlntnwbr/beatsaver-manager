@@ -40,7 +40,7 @@ class BeatSaverApi:
             bplist = BsPlaylist.from_json(response)
             return bplist
         except ModelError as exc:
-            raise BeatSaverApiError("playlist data invalid") from exc
+            raise BeatSaverApiError(f"playlist data invalid: {exc}") from exc
 
     def get_song_by_key(self, key: str) -> BsMap:
         """Download the metadata of a custom level referenced by key."""
@@ -53,7 +53,7 @@ class BeatSaverApi:
             lvl = BsMap.from_json(response)
             return lvl
         except ModelError as exc:
-            raise BeatSaverApiError("custom level data invalid") from exc
+            raise BeatSaverApiError(f"level data invalid: {exc}") from exc
 
     def download_map_from_url(self, bsmap: BsMap) -> BsMap:
         """Download zipped custom level data referenced by url."""
@@ -67,17 +67,21 @@ class BeatSaverApi:
     def _get_beatsaver_url(url: str) -> bytes:
         """Return response content of Beat Saver GET request to url."""
         try:
-            response = requests.get(url)
-            response.raise_for_status()
-            return response.content
-        except requests.HTTPError as exc:
-            if response.status_code == 404:
-                err = "unable to locate song on Beat Saver"
+            bsr = requests.get(url)
+            bsr.raise_for_status()
+            return bsr.content
+        except requests.RequestException as exc:
+            if isinstance(exc, requests.HTTPError) and bsr.status_code == 404:
+                err = "can't find item on BeatSaver: "
+            elif isinstance(exc, requests.HTTPError):
+                err = "invalid response from BeatSaver: "
+            elif isinstance(exc, requests.Timeout):
+                err = "connection to BeatSaver timed out: "
+            elif isinstance(exc, requests.ConnectionError):
+                err = "can't connect to BeatSaver: "
             else:
-                err = f"Beat Saver returned status code {response.status_code}"
-            raise BeatSaverApiError(err, url) from exc
-        except requests.ConnectionError as exc:
-            raise BeatSaverApiError("unable to connect to Beat Saver") from exc
+                err = "an unexpected error occurred connecting to BeatSaver: "
+            raise BeatSaverApiError(err + url) from exc
 
     def _format_playlist_url(self, key: str) -> str:
         """Return download url for a playlist referenced by key."""
