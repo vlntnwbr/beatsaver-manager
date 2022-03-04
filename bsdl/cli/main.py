@@ -28,7 +28,7 @@ def main() -> None:
     command, action = args.command, args.subcommand
     setup_logging(args.log_level)
     logger = logging.getLogger(f"{command}-{action}")
-    logger.debug("BEATSABER_DIRECTORY: ", args.beatsaber)
+    logger.debug("BEATSABER_DIRECTORY: %s", args.beatsaber)
     try:
         cmd = CliCommands(args.beatsaber, logger)
     except BeatSaberError as exc:
