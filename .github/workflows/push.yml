@@ -37,7 +37,7 @@ jobs:
         python -m pip install -q --upgrade pip pipenv setuptools wheel
         pipenv install -d
         pipenv graph
-        echo "::set-output name=package::bsmgr"
+        echo "::set-output name=package::bsdl"
     - name: Run Bandit Security Checks
       id: security
       run: |
