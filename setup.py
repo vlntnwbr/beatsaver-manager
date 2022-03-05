@@ -13,7 +13,6 @@
 
 """Setup script."""
 
-from importlib.metadata import entry_points
 import subprocess  # nosec
 
 from pathlib import Path
