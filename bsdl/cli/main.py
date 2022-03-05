@@ -13,12 +13,10 @@
 
 """Main entry point for beatsaber-playlist-manager."""
 
-import logging
-
 from .cmd import CliCommands
 from .utils import CommandLineInterface
 from ..core.exceptions import BeatSaberError
-from ..core.utils import setup_logging
+from ..core.utils import get_logger
 
 
 def main() -> None:
@@ -26,8 +24,7 @@ def main() -> None:
     cli = CommandLineInterface.setup()
     args = cli.parse_args()
     command, action = args.command, args.subcommand
-    setup_logging(args.log_level)
-    logger = logging.getLogger(f"{command}-{action}")
+    logger = get_logger(f"{command}-{action}", args.log_level)
     logger.debug("BEATSABER_DIRECTORY: %s", args.beatsaber)
     try:
         cmd = CliCommands(args.beatsaber, logger)

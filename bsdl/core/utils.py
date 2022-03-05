@@ -38,24 +38,12 @@ def get_file_checksum(filename: str) -> str:
     return get_checksum(content)
 
 
-def setup_logging(level: str) -> None:
-    """Set up logging stream handler with given level."""
-    logging.basicConfig(
-        format="%(name)s | %(levelname)-8s |  %(message)s",
-        level=LOG_LEVELS[level.lower()]
-    )
-
-
-if __name__ == '__main__':
-    setup_logging("DEBUG")
-    loggers = (
-        "bpl-install", "bpl-list", "bpl-remove", "bpl-sync", "bpl-upgrade",
-        "lvl-install", "lvl-list", "lvl-remove", "lvl-sync"
-    )
-    for logname in loggers:
-        log = logging.getLogger(logname)
-        log.debug("Hello There")
-        log.info("General Kenobi")
-        log.warning("You Are a Bold One")
-        log.error("Kill Him")
-        log.critical("Back away! I will deal with this Jedi slime myself")
+def get_logger(name: str, level: str) -> logging.Logger:
+    """Create logger for name with stream handler at given log level."""
+    fmt = logging.Formatter("%(name)s | %(levelname)-8s |  %(message)s")
+    logger = logging.getLogger(name)
+    logger.setLevel(LOG_LEVELS[level.lower()])
+    handler = logging.StreamHandler()
+    handler.setFormatter(fmt)
+    logger.addHandler(handler)
+    return logger
