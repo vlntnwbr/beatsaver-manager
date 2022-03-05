@@ -1,0 +1,53 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "py",
+            "args": ["setup.py", "sdist", "bdist_wheel"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "flake8",
+            "type": "shell",
+            "command": "pipenv",
+            "args": ["run", "flake8", "--max-doc-length", "72", "bsdl", "setup.py"],
+            "problemMatcher": ["$eslint-compact"]
+        },
+        {
+            "label": "pylint",
+            "type": "shell",
+            "command": "pipenv",
+            "args": ["run", "pylint", "-f", "colorized", "bsdl", "setup.py"],
+            "problemMatcher": ["$eslint-compact"]
+        },
+        {
+            "label": "pydocstyle",
+            "type": "shell",
+            "command": "pipenv",
+            "args": ["run", "pydocstyle", "bsdl", "setup.py"],
+            "problemMatcher": ["$eslint-compact"]
+        },
+        {
+            "label": "pydocstyle (detailed)",
+            "type": "shell",
+            "command": "pipenv",
+            "args": ["run", "pydocstyle", "-e", "bsdl", "setup.py"],
+            "problemMatcher": ["$eslint-compact"]
+        },
+        
+        {
+            "label": "bandit",
+            "type": "shell",
+            "command": "pipenv",
+            "args": ["run", "bandit", "-r", "bsdl", "setup.py"],
+            "problemMatcher": ["$eslint-compact"]
+        }
+    ]
+}

@@ -1,0 +1,302 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {  // err: --log-level
+            "name": "[ ERR ] --log-level",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["--log-level", "NOT_A_VALID_LOG_LEVEL"],
+            "env": {"BEATSABER": "./.beatsaber"}
+        },
+        {  // err: --beatsaber
+            "name": "[ ERR ] --beatsaber",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["--beatsaber", "NONEXISTENT_DIRECTORY"],
+            "env": {"BSDL_LOG_LEVEL": "debug"}
+        },
+        {  // bpl install
+            "name": "bpl install",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": [
+                "bpl", "install",
+                "https://beatsaver.com/playlists/3445",
+                "https://vweber.eu",
+                "https://api.beatsaver.com/playlists/id/3351/download"
+            ],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl install --keys
+            "name": "bpl install --keys",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": [
+                "bpl", "install", "--keys", "3445", "abcd", "3444"
+            ],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl install --force --files
+            "name": "bpl install --files",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": [
+                "bpl", "install", "--force", "--files",
+                ".beatsaber/.test_data/_err.bplist",
+                ".beatsaber/.test_data/3351.bplist",
+            ],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl list
+            "name": "bpl list",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "list"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl list --outdated
+            "name": "bpl list --outdated",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "list", "--outdated"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl rm
+            "name": "bpl rm",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "rm", "2218", "3351"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl rm --files
+            "name": "bpl rm --files",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": [
+                "bpl", "rm", "--files",
+                "_no_exist.bplist",
+                ".beatsaber/Playlists/beatsaver-3444.bplist"
+        ],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl rm --keep-songs
+            "name": "bpl rm --keep-songs",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "rm", "--keep-songs", "3445"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl sync
+            "name": "bpl sync",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "sync"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl sync --remove
+            "name": "bpl sync --remove",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "sync", "--remove"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl upgrade --bpl
+            "name": "bpl upgrade --bpl",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "upgrade", "--bpl", "3351", "3444"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl upgrade
+            "name": "bpl upgrade",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "upgrade"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // bpl upgrade --remove-songs
+            "name": "bpl upgrade --remove-songs",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["bpl", "upgrade", "--remove-songs"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl install
+            "name": "lvl install",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": [
+                "lvl", "install",
+                "https://beatsaver.com/maps/7707",
+                "https://vweber.eu",
+                "https://api.beatsaver.com/maps/id/44f4"
+            ],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl install --keys
+            "name": "lvl install --keys",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "install", "--keys", "44f4", "11ed6", "abcdefgh"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl install --force
+            "name": "lvl install --force",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "install", "--force", "44f4"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl list
+            "name": "lvl list",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "list"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl list --check-playlists
+            "name": "lvl list --check-playlists",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "list", "--check-playlists"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl rm
+            "name": "lvl rm",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "rm", "147e", "5257", "44f4"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl rm --files
+            "name": "lvl rm --files",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": [
+                "lvl", "rm", "--files",
+                ".beatsaber/Beat Saber_Data/CustomLevels/44f4 (Power Glove - Knife Party - LittleAsi)",
+                ".beatsaber/Beat Saber_Data/CustomLevels/5257 (Bonfire - Knife Party - Funrankable)",
+                ".beatsaber/Beat Saber_Data/CustomLevels/11ed6 (Mick Gordon - Icon of Sin - Foow17)"
+            ],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl rm --force
+            "name": "lvl rm --force",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "rm", "--force", "5257"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl sync
+            "name": "lvl sync",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "sync"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        },
+        {  // lvl sync --remove
+            "name": "lvl sync --remove",
+            "type": "python",
+            "request": "launch",
+            "module": "bsdl.cli.main",
+            "args": ["lvl", "sync", "--remove"],
+            "env": {
+                "BEATSABER": "./.beatsaber",
+                "BSDL_LOG_LEVEL": "debug"
+            }
+        }
+    ]
+}

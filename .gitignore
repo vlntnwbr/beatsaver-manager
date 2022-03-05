@@ -1,5 +1,4 @@
 # Directories
-/.vscode/
 /.beatsaber/
 **/dist/
 **/venv/
@@ -9,6 +8,8 @@
 *.egg-info/
 
 # Files
+/.vscode/*.code-snippets
+/.vscode/settings.json
 requirements.txt
 *.pyc
 _test*.py
