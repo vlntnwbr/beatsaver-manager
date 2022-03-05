@@ -14,6 +14,7 @@
 """Beatsaver API functionality for beatsaber-playlist-manager."""
 
 from io import BytesIO
+from urllib.parse import urlsplit
 from zipfile import BadZipFile, ZipFile
 
 import requests
@@ -28,6 +29,11 @@ class BeatSaverApi:
     def __init__(self) -> None:
         """Create the API handler."""
         self.base_url = "https://api.beatsaver.com/"
+        self.valid_netlocs = (
+            "beatsaver.com",
+            "api.beatsaver.com",
+            "eu.cdn.beatsaver.com"
+        )
 
     def get_playlist_by_key(self, key: str) -> BsPlaylist:
         """Download a playlist referenced by key."""
@@ -63,9 +69,9 @@ class BeatSaverApi:
         except BadZipFile as exc:
             raise BeatSaverApiError("level data is not a valid zip") from exc
 
-    @staticmethod
-    def _get_beatsaver_url(url: str) -> bytes:
+    def _get_beatsaver_url(self, url: str) -> bytes:
         """Return response content of Beat Saver GET request to url."""
+        url = self.get_valid_beatsaber_url(url)
         try:
             bsr = requests.get(url)
             bsr.raise_for_status()
@@ -91,6 +97,23 @@ class BeatSaverApi:
         """Return download url for a custom level referenced by key."""
         return f"{self.base_url}/maps/id/{key}"
 
+    def get_valid_beatsaber_url(self, url: str) -> str:
+        """Check url for valid BeatSaver netloc and return API url."""
+        split_url = urlsplit(url)
+        if split_url.netloc in self.valid_netlocs[1:]:
+            return url
+        if split_url.netloc == self.valid_netlocs[0]:
+            err_msg = "invalid BeatSaver url path: " + url
+            try:
+                kind, key = split_url.path[1:].split("/")
+                if kind == "maps":
+                    return self._format_song_url(key)
+                if kind == "playlists":
+                    return self._format_playlist_url(key)
+                raise BeatSaverApiError(err_msg)
+            except ValueError as exc:
+                raise BeatSaverApiError(err_msg) from exc
+        raise BeatSaverApiError("url does not point to BeatSaver: " + url)
 
 if __name__ == '__main__':
     api = BeatSaverApi()
