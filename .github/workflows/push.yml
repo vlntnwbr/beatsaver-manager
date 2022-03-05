@@ -56,13 +56,13 @@ jobs:
     - name: Build Source Distribution
       id: build
       run: |
-        python setup.py sdist
+        python setup.py sdist bdist_wheel
         $name = python setup.py --name
         $version = python setup.py --version
         echo "::set-output name=version::${version}"
         echo "::set-output name=name::${name}"
         echo "::set-output name=sdist::${name}-${version}.tar.gz"
-        echo "::set-output name=bdist::${{ steps.prep.outputs.package }}-${version}-py3-none-any.whl"
+        echo "::set-output name=bdist::beatsaver_manager-${version}-py3-none-any.whl"
     - name: Check Release Readiness  # only on tags starting with v
       if: ${{ startsWith( github.ref, 'refs/tags/v' ) }}
       id: is_rc_ok
