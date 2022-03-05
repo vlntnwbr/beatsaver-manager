@@ -43,7 +43,7 @@ copied by holding Shift while right-clicking a folder and selecting the option
 ```
 
 ### Set Oculus Directory
-Example Location: `C:\Program Files\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\CustomLevels`
+- Example Location: `C:\Program Files\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\CustomLevels`
 ```
 [System.Environment]::SetEnvironmentVariable("BEATSABER", "C:\Program Files\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\CustomLevels", [System.EnvironmentVariableTarget]::User)
 ```

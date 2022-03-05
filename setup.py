@@ -13,6 +13,7 @@
 
 """Setup script."""
 
+from importlib.metadata import entry_points
 import subprocess  # nosec
 
 from pathlib import Path
@@ -21,7 +22,7 @@ from typing import List
 from setuptools import find_packages, setup
 
 PROG = "beatsaver-manager"
-DESC = ""
+DESC = "Manager for Custom Beat Saber Playlists and Levels from BeatSaver"
 VERSION = "0.0.1"
 GITHUB = "https://github.com/vlntnwbr/beatsaver-manager"
 
@@ -72,10 +73,10 @@ if __name__ == '__main__':
     create_requirements_txt()
     REQUIREMENTS = read_requirements()
     README = README_MD.read_text(encoding="utf-8")
-    setup(
+    setup(  # noqa
         name=PROG,
         description=DESC,
-        long_description=README_MD,
+        long_description=README,
         long_description_content_type="text/markdown",
         version=VERSION,
         packages=find_packages(),
@@ -84,5 +85,25 @@ if __name__ == '__main__':
         license="EUPL",
         url=GITHUB,
         author="Valentin Weber",
-        author_email="dev@vweber.eu"
+        author_email="dev@vweber.eu",
+        entry_points={"console_scripts": [
+            "bsdl = bsdl.cli.main:main"
+        ]},
+        project_urls={
+            "Issue Tracker": GITHUB + "/issues",
+            "Bug Tracker": GITHUB + "/labels/bug"
+        },
+        classifiers=[  # pylint: disable=line-too-long
+            "Development Status :: 3 - Alpha",
+            "Environment :: Console",
+            "Intended Audience :: End Users/Desktop",
+            "License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)", # noqa
+            "Natural Language :: English",
+            "Operating System :: Microsoft :: Windows",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.10",
+            "Topic :: Desktop Environment :: File Managers",
+            "Topic :: Games/Entertainment",
+            "Topic :: Utilities"
+        ]
     )
