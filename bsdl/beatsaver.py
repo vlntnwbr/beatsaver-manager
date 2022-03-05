@@ -114,9 +114,3 @@ class BeatSaverApi:
             except ValueError as exc:
                 raise BeatSaverApiError(err_msg) from exc
         raise BeatSaverApiError("url does not point to BeatSaver: " + url)
-
-if __name__ == '__main__':
-    api = BeatSaverApi()
-    playlist = api.get_playlist_by_key(1056)
-    # print(repr(playlist))
-    # playlist.write_json(".beatsaber")

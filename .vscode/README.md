@@ -3,7 +3,7 @@
 | ---------------- | ----------------------------------- | -------------------------- | ---- |
 | _test1 <=> 3351  | [Web][_test1_web] [API][_test1_api] | DEUTSCHLAND - Rammstein    | 42ea |
 | _test2 <=> 3444  | [Web][_test2_web] [API][_test2_api] | Eskimo Callboy - Hypa Hypa | b741 |
-| _test1 <=> 3445  | [Web][_test3_web] [API][_test3_api] | Bonfire - Knife Party      | 5257 |
+| _test3 <=> 3445  | [Web][_test3_web] [API][_test3_api] | Bonfire - Knife Party      | 5257 |
 
 | Test Level                               | Key   | BeatSaver                           |
 | ---------------------------------------- | ----- | ----------------------------------- |
@@ -38,7 +38,8 @@ bsdl bpl install --force --files _err.bplist 3351.bplist
 ```
 **Expected Results**
 1. Playlist is skipped because the JSON is missing the 'title' key
-2. Playlist _test1 is is overwritten 
+2. Playlist _test1 is is overwritten but level "DEUTSCHLAND - Rammstein" is
+   found locally and not installed
 
 ## bsdl bpl list
 
@@ -76,7 +77,7 @@ bsdl bpl rm --files _no_exist.bplist .beatsaber/Playlists/beatsaver-3444.bplist
 ```
 **Expected Results**
 1. Playlist is skipped because it doesn't exist
-2. Playlist "_test2" and level "Exkimo Callboy - Hypa Hypa" are removed
+2. Playlist "_test2" and level "Eskimo Callboy - Hypa Hypa" are removed
 
 ### Remove a Playlist But Keep All The Songs
 ```
@@ -116,13 +117,13 @@ bsdl bpl upgrade --bpl 3351 3444
 ```
 **Expected Results**
 1. Playlist "_test1" is skipped because it isn't installed
-2. Playlist _test2 and level "Eskimo Callboy - Hypa Hypa" are installed
-3. Playlist _test3 is not upgraded and its file does not list any songs
+2. Playlist "_test2" and level "Eskimo Callboy - Hypa Hypa" are installed
+3. Playlist "_test3" is not upgraded and its file does not list any songs
 
 ### Upgrade All Outdated Playlists
 **Preparation**
 ```
-cp .beatsaber/.test_data/beatsaver-3445.bplist .beatsaber/Playlists/
+cp .beatsaber/.test_data/beatsaver-3351.bplist .beatsaber/Playlists/
 ```
 - Move "Eskimo Callboy - Hypa Hypa" from "_test2" to "_test3"
 - Move "Bonfire - Knife Party" from "_test3" to "_test2"
@@ -132,7 +133,7 @@ bsdl bpl upgrade
 **Expected Results**
 1. Playlist "_test1" and level "DEUTSCHLAND - Rammstein" are installed
 2. Playlist "_test2" is installed and level "Bonfire - Knife Party" is skipped
-3. Playlist "_test3" is installed and level "Eskimo Callboy - Hypa Hypa" is found
+3. Playlist "_test3" is installed and level "Eskimo Callboy - Hypa Hypa" is skipped
 
 ### Upgrade All Outdated Playlists And Remove Their Songs
 **Preparation**
@@ -172,7 +173,7 @@ bsdl lvl install 44f4 11ed6 abcdefgh
 
 ### Forcefully Install a Level That Is Already Installed
 ```
-bsdl lvl install --force 44f4
+bsdl lvl install --force https://api.beatsaver.com/maps/id/44f4
 ```
 **Expected Results**
 1. Level "Power Glove - Knife Party" is installed

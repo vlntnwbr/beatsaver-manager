@@ -49,7 +49,7 @@ class CliCommands(BeatSaberManager):
             if remove:
                 try:
                     self.remove_custom_level(lvl)
-                    self.log.info("%s, Removed Level", lvl)
+                    self.log.info("%s: Removed Level", lvl)
                 except BeatSaberError as exc:
                     self.log_exc("Can't Remove Level", lvl, exc)
 
@@ -182,7 +182,7 @@ class CliCommands(BeatSaberManager):
                 else:
                     lvl = self.api.get_song_from_url(lvl_ref)
             except BeatSaverApiError as exc:
-                self.log_exc("Can't Fetch Level Data:", lvl_ref, exc)
+                self.log_exc("Can't Fetch Level Data", lvl_ref, exc)
                 continue
             self.log.info("%s: Installing Level", lvl)
             if not force and self.get_custom_level_by_key(lvl.key) is not None:
@@ -254,7 +254,7 @@ class CliCommands(BeatSaberManager):
                 self.log.info("%s: Starting Download", lvl)
                 lvl_data = self.api.get_song_by_key(lvl.key)
                 custom_lvl = self.api.download_map_from_url(lvl_data)
-                self.log.info("%s: Installing Level")
+                self.log.info("%s: Installing Level", lvl)
                 self.install_custom_level(custom_lvl)
             except BeatSaberError as exc:
                 self.log_exc("Can't Install Level", lvl, exc)
@@ -286,7 +286,6 @@ class CliCommands(BeatSaberManager):
             if any(bpl.contains_song(lvl) for bpl in bpl_list) and not force:
                 self.log_lvl_skip(lvl)
                 continue
-            self.log.info("%s: Removing Level", lvl)
             try:
                 self.remove_custom_level(lvl)
             except BeatSaberError as exc:

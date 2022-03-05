@@ -50,7 +50,7 @@
             }
         },
         {  // bpl install --force --files
-            "name": "bpl install --files",
+            "name": "bpl install --force --files",
             "type": "python",
             "request": "launch",
             "module": "bsdl.cli.main",
@@ -210,7 +210,7 @@
             "type": "python",
             "request": "launch",
             "module": "bsdl.cli.main",
-            "args": ["lvl", "install", "--force", "44f4"],
+            "args": ["lvl", "install", "--force", "https://api.beatsaver.com/maps/id/44f4"],
             "env": {
                 "BEATSABER": "./.beatsaber",
                 "BSDL_LOG_LEVEL": "debug"
