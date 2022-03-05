@@ -141,7 +141,7 @@ class CliCommands(BeatSaberManager):
         if bpl_list is not None:
             self.log.info("Upgrading %s Playlists", len(bpl_list))
             bpls = []
-            for bpl_ref in bpls:
+            for bpl_ref in bpl_list:
                 local_bpl = self.get_playlist_by_key(bpl_ref)
                 if local_bpl is None:
                     self.log.warning("%s: Can't Find Playlist", bpl_ref)
