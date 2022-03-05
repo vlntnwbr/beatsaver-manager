@@ -140,7 +140,7 @@ bsdl bpl upgrade
 ```
 bsdl bpl upgrade --remove-songs
 ```
-- ...
+
 **Expected Results**
 1. Playlist "_test2" is installed and level "Bonfire - Knife Party" is removed
 ---
