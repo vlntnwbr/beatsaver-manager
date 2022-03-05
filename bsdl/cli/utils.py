@@ -250,9 +250,12 @@ class TablePrinter:
         self.col_key = "KEY"
         self.table_row = ""
         self.printing_table = []
+        self.default_len = len(self.printing_table)
 
     def print(self) -> None:
         """Print all rows of printing table."""
+        if len(self.printing_table) == self.default_len:
+            return
         print("\n" + "\n".join(self.printing_table))
 
     def add_row(self, row: str) -> None:
@@ -273,9 +276,9 @@ class LvlListPrinter(TablePrinter):
     def append(self, lvl: CustomLevel, bpls: Iterable[str] = ()) -> None:
         """Append a table row for a custom level the printing table."""
         if self.bpl_check:
-            self._add_bpl_row(lvl.key, lvl.title, ", ".join(bpls))
+            self._add_bpl_row(lvl.key, lvl.name, ", ".join(bpls))
         else:
-            self._add_lvl_row(lvl.key, lvl.title)
+            self._add_lvl_row(lvl.key, lvl.name)
 
     def _init_printing_table(self) -> None:
         """Format table row and add head of printing table."""
@@ -287,6 +290,7 @@ class LvlListPrinter(TablePrinter):
             self.table_row = "| {:6} | {:107} |"
             self._add_lvl_row(self.col_key, self.col_title)
             self._add_lvl_row("-" * 6, "-" * 107)
+        self.default_len = len(self.printing_table)
 
     def _add_bpl_row(self, key: str, title: str, playlists: str) -> None:
         """Append a row with playlist column to printing table."""
@@ -324,6 +328,7 @@ class BplListPrinter(TablePrinter):
             self.table_row = "| {:4} | {:109} |"
             self._add_standard_row(self.col_key, self.col_title)
             self._add_standard_row("-" * 4, "-" * 109)
+        self.default_len = len(self.printing_table)
 
     def _add_outdated_row(self, key: str, name: str, outdated: str) -> None:
         """Append a row with outdated column to printing table."""
