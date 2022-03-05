@@ -1,5 +1,6 @@
 # Directories
-/.beatsaber/
+/.beatsaber/Playlists/
+/.beatsaber/Beat Saber_Data
 **/dist/
 **/venv/
 **/.venv/
