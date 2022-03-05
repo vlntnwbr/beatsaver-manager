@@ -46,7 +46,7 @@ bsdl bpl install --force --files _err.bplist 3351.bplist
 ```
 bsdl bpl list
 ```
-***Expected Results**
+**Expected Results**
 - A table with all Titles and Keys of installed playlists is printed to the console
 
 ### List All Installed Playlists With Outdated Column
@@ -55,7 +55,7 @@ bsdl bpl list
 ```
 bsdl bpl list --outdated
 ```
-***Expected Results**
+**Expected Results**
 - A table with all Titles and Keys of installed playlists is printed to the console
 - Additionally a third column will indicate whether a playlist is outdated
 - The playlist _test2 will be recognized as outdated
@@ -66,7 +66,7 @@ bsdl bpl list --outdated
 ```
 bsdl bpl rm 2218 3351
 ```
-***Expected Results**
+**Expected Results**
 1. Playlist is skipped because it isn't installed
 2. Playlist "_test1" and level "DEUTSCHLAND - Rammstein" are removed
 
@@ -74,7 +74,7 @@ bsdl bpl rm 2218 3351
 ```
 bsdl bpl rm --files _no_exist.bplist .beatsaber/Playlists/beatsaver-3444.bplist
 ```
-***Expected Results**
+**Expected Results**
 1. Playlist is skipped because it doesn't exist
 2. Playlist "_test2" and level "Exkimo Callboy - Hypa Hypa" are removed
 
@@ -82,7 +82,7 @@ bsdl bpl rm --files _no_exist.bplist .beatsaber/Playlists/beatsaver-3444.bplist
 ```
 bsdl bpl rm --keep-songs 3445
 ```
-***Expected Results**
+**Expected Results**
 1. Playlist "_test3" but not level "Bonfire - Knife Party" is removed
 
 ## bsdl bpl sync
@@ -107,6 +107,8 @@ bsdl bpl sync --remove
 **Preparation**
 ```
 cp .beatsaber/.test_data/beatsaver-3444.bplist .beatsaber/Playlists/
+```
+```
 cp .beatsaber/.test_data/beatsaver-3445.bplist .beatsaber/Playlists/
 ```
 ```
@@ -140,7 +142,8 @@ bsdl bpl upgrade --remove-songs
 ```
 - ...
 **Expected Results**
-1. ---
+1. Playlist "_test2" is installed and level "Bonfire - Knife Party" is removed
+---
 
 **Cleanup**
 - Playlist "_test1" shall only contain the level "DEUTSCHLAND - Rammstein"
