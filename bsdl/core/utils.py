@@ -15,6 +15,7 @@
 
 import hashlib
 import logging
+import re
 
 LOG_LEVELS = {
         "debug": logging.DEBUG,
@@ -47,3 +48,9 @@ def get_logger(name: str, level: str) -> logging.Logger:
     handler.setFormatter(fmt)
     logger.addHandler(handler)
     return logger
+
+def  get_windows_filename(name: str) -> str:
+    """Return name removing all chars forbidden in Windows filenames."""
+    if any(char in name for char in r'<>:"/\|?*'):
+        name = re.sub(r'[<>:"/\\|\?\*]', "", name)
+    return name

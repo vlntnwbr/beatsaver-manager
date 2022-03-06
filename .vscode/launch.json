@@ -187,7 +187,8 @@
                 "lvl", "install",
                 "https://beatsaver.com/maps/7707",
                 "https://vweber.eu",
-                "https://api.beatsaver.com/maps/id/44f4"
+                "https://api.beatsaver.com/maps/id/44f4",
+                "https://beatsaver.com/maps/11c7f",
             ],
             "env": {
                 "BEATSABER": "./.beatsaber",

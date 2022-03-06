@@ -11,6 +11,7 @@
 | Power Glove - Knife Party                | 44f4  | [Web][_power_web] [API][_power_api] |
 | Mick Gordon - Icon of Sin                | 11ed6 | [Web][_icon_web] [API][_icon_api]   |
 | Skyrim Theme - Song of the Dragonborn    | 147e  | [Web][_tesv_web] [API][_tesv_api]   |
+| Sabaton - 40:1                           | 11c7f | [Web][_401_web] [API][_401_api]
 
 ## bsdl bpl install
 
@@ -155,12 +156,13 @@ bsdl bpl upgrade --remove-songs
 
 ### Install Levels From URLs
 ```
-bsdl lvl install _mando_web https://vweber.eu _power_api
+bsdl lvl install _mando_web https://vweber.eu _power_api _401_web
 ```
 **Expected Results**
 1. Level "Ludwig Görransson - The Mandalorian Theme" is installed
 2. Level is skipped because the URL is invalid
 3. Level "Power Glove - Knife Party" is installed
+4. Level "Sabaton - 40:1" is installed with removed ":" in directory name
 
 ### Install Levels From BeatSaver Keys
 ```
@@ -257,3 +259,5 @@ bsdl lvl sync --remove
 [_icon_api]: https://api.beatsaver.com/maps/id/11ed6
 [_tesv_web]: https://beatsaver.com/maps/147e
 [_tesv_api]: https://api.beatsaver.com/maps/id/147e
+[_401_web]: https://beatsaver.com/maps/11c7f
+[_401_api]: https://api.beatsaver.com/maps/id/11c7f

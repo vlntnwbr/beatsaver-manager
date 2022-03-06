@@ -21,7 +21,7 @@ from typing import Optional, Tuple
 from zipfile import ZipFile
 
 from .exceptions import ModelError
-from .utils import get_checksum
+from .utils import get_checksum, get_windows_filename
 
 
 @dataclasses.dataclass(repr=True)
@@ -107,7 +107,7 @@ class BsPlaylist(Model):  # pylint: disable=too-many-instance-attributes
         """Return filename from filepath or construct it using key."""
         if self.filepath is not None:
             return self.filepath.name  # pylint: disable=no-member
-        return f"beatsaver-{self.key}.bplist"
+        return get_windows_filename(f"beatsaver-{self.key}.bplist")
 
     def __str__(self) -> str:
         """Return title of playlist."""
@@ -157,8 +157,8 @@ class BsMap(Model):
 
     @property
     def directory(self) -> Path:
-        """Return the map's directory path as: 'key (name - author)'."""
-        return Path(f"{self.key} ({self.name} - {self.author})")
+        """Return the map's relative directory path as: 'key (name)'."""
+        return Path(get_windows_filename(f"{self.key} ({self.name})"))
 
     def __str__(self) -> str:
         """Return the name of the map."""
