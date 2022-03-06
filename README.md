@@ -3,6 +3,14 @@ Command Line Interface to install, remove and update custom Beat Saber levels
 using the [BeatSaver][beatsaver] API.
 
 ## Installation
+Install via pip like any other Python package:
+```
+pip install beatsaver-manager
+```
+Alternatively use pipx
+```
+pipx install beatsaver-manager
+```
 
 ## Command Line Interface (CLI)
 ```
