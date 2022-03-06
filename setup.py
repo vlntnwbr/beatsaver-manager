@@ -22,7 +22,7 @@ from setuptools import find_packages, setup
 
 PROG = "beatsaver-manager"
 DESC = "Manager for Custom Beat Saber Playlists and Levels from BeatSaver"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 GITHUB = "https://github.com/vlntnwbr/beatsaver-manager"
 
 HEREDIR = Path(__file__).resolve().parent
