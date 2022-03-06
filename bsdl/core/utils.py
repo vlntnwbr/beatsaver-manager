@@ -49,7 +49,8 @@ def get_logger(name: str, level: str) -> logging.Logger:
     logger.addHandler(handler)
     return logger
 
-def  get_windows_filename(name: str) -> str:
+
+def get_windows_filename(name: str) -> str:
     """Return name removing all chars forbidden in Windows filenames."""
     if any(char in name for char in r'<>:"/\|?*'):
         name = re.sub(r'[<>:"/\\|\?\*]', "", name)
